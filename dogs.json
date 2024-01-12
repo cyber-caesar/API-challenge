@@ -1,0 +1,30 @@
+[
+    {
+        "name": "Labrador Retriever",
+        "lifespan": "10-12 years",
+        "size": "Large",
+        "temperament": "Outgoing, Even Tempered, Gentle",
+        "origin": "Canada"
+    },
+    {
+        "name": "German Shepherd",
+        "lifespan": "9-13 years",
+        "size": "Large",
+        "temperament": "Loyal, Confident, Courageous",
+        "origin": "Germany"
+    },
+    {
+        "name": "Golden Retriever",
+        "lifespan": "10-12 years",
+        "size": "Large",
+        "temperament": "Intelligent, Friendly, Devoted",
+        "origin": "United Kingdom"
+    },
+    {
+        "name": "French Bulldog",
+        "lifespan": "10-12 years",
+        "size": "Small",
+        "temperament": "Adaptable, Playful, Smart",
+        "origin": "France"
+    }
+]
