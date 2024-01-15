@@ -1,30 +1,12 @@
-[
-    {
-        "name": "Labrador Retriever",
-        "lifespan": "10-12 years",
-        "size": "Large",
-        "temperament": "Outgoing, Even Tempered, Gentle",
-        "origin": "Canada"
-    },
-    {
-        "name": "German Shepherd",
-        "lifespan": "9-13 years",
-        "size": "Large",
-        "temperament": "Loyal, Confident, Courageous",
-        "origin": "Germany"
-    },
-    {
-        "name": "Golden Retriever",
-        "lifespan": "10-12 years",
-        "size": "Large",
-        "temperament": "Intelligent, Friendly, Devoted",
-        "origin": "United Kingdom"
-    },
-    {
-        "name": "French Bulldog",
-        "lifespan": "10-12 years",
-        "size": "Small",
-        "temperament": "Adaptable, Playful, Smart",
-        "origin": "France"
-    }
-]
+{
+  "name": "American Eskimo Dog",
+  "id": 12,
+  "temperament": "Friendly, Alert, Reserved, Intelligent, Protective",
+  "lifespan": "12 - 15 years",
+  "imgUrl": "https://cdn2.thedogapi.com/images/Bymjyec4m_1280.jpg",
+  "weightKg": "9 - 18",
+  "weightLbs": "20 - 40",
+  "heightCm": "38 - 48",
+  "heightInches": "20 - 40"
+}
+

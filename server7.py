@@ -1,7 +1,8 @@
-from fastapi import Body, Depends, File, HTTPException, UploadFile, requests, status, Security, FastAPI
+from fastapi import Body, Depends, File, HTTPException, UploadFile, status, Security, FastAPI, Request
 from fastapi.security import APIKeyHeader, APIKeyQuery
-from pydantic import BaseModel
+import requests
 import json
+from config import data_base
 
 API_KEYS = [
     "9d207bf0-10f5-4d8f-a479-22ff5aeff8d1",
@@ -9,59 +10,37 @@ API_KEYS = [
     "b7061546-75e8-444b-a2c4-f19655d07eb8",
 ]
 
-data_list = [
-    {
-        "name": "Labrador Retriever",
-        "lifespan": "10-12 years",
-        "size": "Large",
-        "temperament": "Outgoing, Even Tempered, Gentle",
-        "origin": "Canada",
-    },
-    {
-        "name": "German Shepherd",
-        "lifespan": "9-13 years",
-        "size": "Large",
-        "temperament": "Loyal, Confident, Courageous",
-        "origin": "Germany",
-    },
-    {
-        "name": "Golden Retriever",
-        "lifespan": "10-12 years",
-        "size": "Large",
-        "temperament": "Intelligent, Friendly, Devoted",
-        "origin": "United Kingdom",
-    },
-    {
-        "name": "French Bulldog",
-        "lifespan": "10-12 years",
-        "size": "Small",
-        "temperament": "Adaptable, Playful, Smart",
-        "origin": "France",
-    },
-]
+data_list = requests.get(data_base).text
+json_data = data_list.replace('\"', '"')
+json_data = json.loads(json_data)
 
 api_key_query = APIKeyQuery(name="api-key", auto_error=False)
 api_key_header = APIKeyHeader(name="x-api-key", auto_error=False)
 
 def get_api_key(
+    request: Request,
     api_key_query: str = Security(api_key_query),
     api_key_header: str = Security(api_key_header),
 ) -> str:
-    if api_key_query in API_KEYS:
-        return api_key_query
-    if api_key_header in API_KEYS:
-        return api_key_header
-    raise HTTPException(
-        status_code=status.HTTP_401_UNAUTHORIZED,
-        detail="Invalid or missing API Key",
-    )
+    api_key = api_key_query or api_key_header
+    request_method = request.method
+    if request_method == "GET" and api_key not in API_KEYS:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or missing API Key for GET method",
+        )
+    elif request_method == "POST" and api_key != API_KEYS[0]:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid or missing API Key for POST method",
+        )
+    return api_key
 
 app = FastAPI()
 
 @app.get("/dog-list")
 def get_data(api_key: str = Depends(get_api_key)):
-    
-    return data_list
+    return json_data
 
 @app.post("/match-json")
 async def match_json(
@@ -78,11 +57,16 @@ async def match_json(
         )
 
     # Check if the provided JSON object matches any object in the list
-    matched_item = next((item for item in data_list if all(item[key] == user_dog[key] for key in item)), None)
+    matched_item = next(
+        (item for item in json_data if all(
+            key in item and item[key] == user_dog[key]
+            for key in user_dog
+        )),
+        None,
+    )
 
-    
     if matched_item:
-        return matched_item
+        return "File Match successful: " + json.dumps(matched_item)
     else:
         raise HTTPException(
             status_code=404,
